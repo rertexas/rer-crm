@@ -15,22 +15,21 @@
   html,body{margin:0;height:100%;font-family:'Inter',system-ui,sans-serif;color:var(--ink);background:var(--paper)}
   h1,h2,h3{font-family:'Zilla Slab',serif;margin:0}
   .hidden{display:none !important}
-  /* Login */
   #login{min-height:100vh;display:grid;place-items:center;padding:20px;background:var(--ink)}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,.18);width:100%;max-width:380px;padding:30px 28px}
+  .card{background:var(--panel);border:2px solid #161616;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,.28);width:100%;max-width:380px;padding:30px 28px}
   .logo{width:44px;height:44px;border-radius:10px;background:var(--orange);color:#fff;display:grid;place-items:center;font-family:'Zilla Slab';font-weight:700;font-size:22px;margin-bottom:14px}
   .brand-name{font-size:20px;font-weight:700}
   .brand-tag{color:var(--orange);font-size:12.5px;margin-bottom:20px;font-weight:600}
   label{display:block;font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin:14px 0 5px}
-  input,select{width:100%;font:inherit;padding:11px 13px;border:1px solid var(--line);border-radius:10px;background:#fff}
-  input:focus,select:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px var(--orange-soft)}
+  input,select,textarea{width:100%;font:inherit;padding:11px 13px;border:1px solid var(--line);border-radius:10px;background:#fff}
+  textarea{resize:vertical;min-height:58px}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px var(--orange-soft)}
   .btn{width:100%;font:inherit;font-weight:600;padding:12px;border-radius:10px;border:none;background:var(--orange);color:#fff;cursor:pointer;margin-top:18px;font-size:15px}
   .btn:hover{filter:brightness(1.05)}
   .btn.ghost{background:transparent;color:var(--orange);margin-top:10px;font-size:13px}
   .msg{margin-top:14px;font-size:13px;padding:10px 12px;border-radius:9px;line-height:1.45}
   .msg.err{background:#FDECEA;color:#B23B2E}
   .msg.ok{background:#E7F4EC;color:var(--green)}
-  /* App shell */
   #app{display:flex;min-height:100vh}
   .sidebar{width:236px;background:var(--ink);color:#EDEBE4;flex:none;padding:18px 14px;display:flex;flex-direction:column;overflow:auto}
   .sb-brand{display:flex;align-items:center;gap:10px;margin-bottom:20px}
@@ -48,11 +47,11 @@
   .topbar h2{font-size:22px}
   .pill{margin-left:auto;background:var(--orange-soft);color:#9c3d12;font-weight:600;font-size:12px;padding:5px 12px;border-radius:20px}
   .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px}
-  .stat{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:15px 18px;position:relative;overflow:hidden}
+  .stat{background:var(--panel);border:1.5px solid #161616;border-radius:var(--radius);padding:15px 18px;position:relative;overflow:hidden;box-shadow:0 2px 0 rgba(22,22,22,.06)}
   .stat::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--orange)}
   .stat .k{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600}
   .stat .v{font-family:'Zilla Slab';font-weight:700;font-size:28px;margin-top:6px}
-  .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin-bottom:16px}
+  .panel{background:var(--panel);border:1.5px solid #161616;border-radius:var(--radius);padding:18px 20px;margin-bottom:16px;box-shadow:0 2px 0 rgba(22,22,22,.06)}
   .panel h3{font-size:16px;margin-bottom:6px}
   .panel p{color:var(--muted);font-size:14px;line-height:1.6;margin:0}
   table{width:100%;border-collapse:collapse;font-size:13.5px}
@@ -62,10 +61,19 @@
   .loado{color:var(--muted);font-size:13px}
   .tag{display:inline-block;background:var(--orange-soft);color:#9c3d12;font-size:11px;font-weight:600;padding:2px 9px;border-radius:12px}
   .phasebar{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 2px}
-  .phase{flex:1;min-width:180px;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--orange);border-radius:10px;padding:12px 14px}
+  .phase{flex:1;min-width:180px;background:var(--panel);border:1.5px solid #161616;border-left:4px solid var(--orange);border-radius:10px;padding:12px 14px}
   .phase b{font-size:13px}.phase span{display:block;color:var(--muted);font-size:12px;margin-top:3px}
   .dir a{color:var(--orange);text-decoration:none;font-weight:600}
   .note{background:var(--orange-soft);border:1px solid #f2c7ad;color:#8a3a12;border-radius:10px;padding:10px 13px;font-size:13px;margin-bottom:14px}
+  .addbar{display:flex;justify-content:flex-end;margin-bottom:12px}
+  .btn-add{background:var(--orange);color:#fff;border:none;border-radius:9px;padding:9px 16px;font:inherit;font-weight:600;font-size:13.5px;cursor:pointer}
+  .btn-add:hover{filter:brightness(1.05)}
+  .modal{position:fixed;inset:0;background:rgba(10,10,10,.5);display:grid;place-items:center;padding:20px;z-index:60}
+  .modal-card{background:var(--panel);border:2px solid #161616;border-radius:14px;width:100%;max-width:440px;max-height:90vh;overflow:auto;padding:22px 24px}
+  .modal-card h3{font-size:18px;margin-bottom:4px}
+  .modal-actions{display:flex;gap:10px;margin-top:18px}
+  .modal-actions .btn{margin-top:0;flex:1}
+  .modal-actions .btn.ghost{flex:0 0 auto;border:1px solid var(--line)}
   @media(max-width:760px){.sidebar{width:100%;flex-direction:row;flex-wrap:wrap;position:static}.main{padding:16px}#app{flex-direction:column}.nav{display:flex;flex-wrap:wrap}.nav-group{margin:0}.nav-group .glabel{display:none}.sb-foot{margin:0}}
 </style>
 </head>
@@ -107,6 +115,19 @@
   </main>
 </div>
 
+<!-- ADD MODAL -->
+<div id="modal" class="modal hidden">
+  <div class="modal-card">
+    <h3 id="modalTitle">Add</h3>
+    <div id="modalBody"></div>
+    <div id="modalMsg"></div>
+    <div class="modal-actions">
+      <button class="btn ghost" type="button" onclick="closeModal()">Cancel</button>
+      <button class="btn" id="saveBtn" type="button">Save</button>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
   const SUPABASE_URL = 'https://rdhgowaockdfpyrzrrpj.supabase.co';
@@ -114,9 +135,29 @@
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
   const $ = id => document.getElementById(id);
   const authMsg = (t, ok) => { $('authMsg').innerHTML = t ? `<div class="msg ${ok?'ok':'err'}">${t}</div>` : ''; };
-  let profile = null;
+  let profile = null, companyId = null, userId = null, curView = 'dashboard';
 
   const TIERS = {owner:'Owner', main_admin:'Main Admin', admin:'Admin', agent:'Agent'};
+  const SING = {leads:'Lead', contacts:'Contact', buyers:'Buyer', sellers:'Seller', properties:'Listing', tasks:'Task', calendar_events:'Event'};
+
+  // Add-form field definitions per table. company_id is attached automatically.
+  const FORMS = {
+    leads: [ {n:'name',l:'Name',req:1},{n:'email',l:'Email'},{n:'phone',l:'Phone'},{n:'source',l:'Source'},
+      {n:'status',l:'Status',opts:['New','Contacted','Qualified','Nurturing','Under Contract','Closed','Lost']},
+      {n:'interest',l:'Interest'},{n:'deal_value',l:'Deal value ($)',type:'number'},{n:'area',l:'Area'},{n:'notes',l:'Notes',ta:1} ],
+    contacts: [ {n:'name',l:'Name',req:1},{n:'type',l:'Type'},{n:'market',l:'Market'},{n:'email',l:'Email'},{n:'phone',l:'Phone'},{n:'notes',l:'Notes',ta:1} ],
+    buyers: [ {n:'name',l:'Name',req:1},{n:'market',l:'Market'},{n:'email',l:'Email'},{n:'phone',l:'Phone'},
+      {n:'budget_min',l:'Budget min ($)',type:'number'},{n:'budget_max',l:'Budget max ($)',type:'number'},
+      {n:'timeline',l:'Timeline'},{n:'status',l:'Status'},{n:'notes',l:'Notes',ta:1} ],
+    sellers: [ {n:'name',l:'Name',req:1},{n:'market',l:'Market'},{n:'email',l:'Email'},{n:'phone',l:'Phone'},
+      {n:'property',l:'Property'},{n:'list_price',l:'List price ($)',type:'number'},{n:'timeline',l:'Timeline'},{n:'status',l:'Status'},{n:'notes',l:'Notes',ta:1} ],
+    properties: [ {n:'name',l:'Listing name',req:1},{n:'type',l:'Type',opts:['Land','Residential','Commercial','Industrial','Ranch','Residential Lease','Industrial Lease']},
+      {n:'board',l:'Board / Market',opts:['PBBOR (Permian Basin)','Odessa','Unlock MLS / ACTRIS (Austin)','Other']},
+      {n:'status',l:'Status',opts:['Active','Pending','Under Contract','Sold','Withdrawn']},{n:'price',l:'Price ($)',type:'number'},{n:'mls_number',l:'MLS #'} ],
+    tasks: [ {n:'title',l:'Task',req:1},{n:'status',l:'Status',opts:['To-do','In progress','Done']},
+      {n:'priority',l:'Priority',opts:['Low','Medium','High']},{n:'due_date',l:'Due date',type:'date'} ],
+    calendar_events: [ {n:'title',l:'Event',req:1},{n:'type',l:'Type'},{n:'event_date',l:'Date',type:'date'} ],
+  };
 
   const GROUPS = [
     {label:'', items:[{v:'dashboard',t:'Dashboard',special:'dashboard'}]},
@@ -136,7 +177,7 @@
       {v:'accounting',t:'Accounting',special:'stub',desc:'Brokerage ledger, invoicing, and payment tracking — the finance back office.'},
     ]},
     {label:'Work', items:[
-      {v:'calendar',t:'Calendar',tbl:'calendar_events',cols:['title','date','type']},
+      {v:'calendar',t:'Calendar',tbl:'calendar_events',cols:['title','event_date','type']},
       {v:'tasks',t:'Tasks',tbl:'tasks',cols:['title','status','priority','due_date']},
       {v:'marketing',t:'Marketing',special:'marketing'},
       {v:'reports',t:'Reports',special:'stub',desc:'Pipeline, production, and compliance reports across the brokerage.'},
@@ -159,7 +200,7 @@
     authMsg('Creating account…');
     const { error } = await sb.auth.signUp({ email: $('email').value.trim(), password: $('password').value });
     if (error) authMsg(error.message);
-    else authMsg('Account created! If email confirmation is on, check your inbox, then sign in.', true);
+    else authMsg('Account created! Ask Chana or Lindsay to approve your access, then sign in.', true);
   };
   $('signoutBtn').onclick = async () => { await sb.auth.signOut(); location.reload(); };
 
@@ -183,8 +224,11 @@
   async function boot() {
     const { data: { user } } = await sb.auth.getUser();
     if (!user) { $('login').classList.remove('hidden'); $('app').classList.add('hidden'); return; }
+    userId = user.id;
     const { data: prof } = await sb.from('profiles').select('*').eq('id', user.id).maybeSingle();
     profile = prof || { email: user.email, tier: 'agent', full_name: user.email };
+    const { data: comp } = await sb.from('companies').select('id').limit(1).maybeSingle();
+    companyId = comp ? comp.id : null;
     $('login').classList.add('hidden'); $('app').classList.remove('hidden');
     $('whoami').textContent = (profile.full_name || profile.email || '');
     $('tierPill').textContent = TIERS[profile.tier] || 'Agent';
@@ -199,6 +243,7 @@
 
   async function renderView(v) {
     const m = ALL[v]; if(!m) return;
+    curView = v;
     $('viewTitle').textContent = m.t;
     const body = $('viewBody'); body.innerHTML = '<div class="loado">Loading…</div>';
     try {
@@ -208,8 +253,44 @@
       if (m.special === 'directory') return renderDirectory(body);
       if (m.special === 'marketing') return renderMarketing(body);
       if (m.special === 'stub')      return renderStub(body, m);
-      return renderTable(body, m.tbl, m.cols);
+      return renderTable(body, m);
     } catch (e) { body.innerHTML = `<div class="msg err">${e.message}</div>`; }
+  }
+
+  function addBar(table){
+    return FORMS[table] ? `<div class="addbar"><button class="btn-add" type="button" onclick="openAddForm('${table}')">+ Add ${SING[table]||'record'}</button></div>` : '';
+  }
+
+  // ---- Add form (modal) ----
+  function openAddForm(table){
+    const fields = FORMS[table]; if(!fields) return;
+    $('modalTitle').textContent = 'Add ' + (SING[table] || 'record');
+    $('modalBody').innerHTML = fields.map(f => {
+      const id = 'f_' + f.n;
+      if (f.opts) return `<label>${f.l}${f.req?' *':''}</label><select id="${id}"><option value="">—</option>${f.opts.map(o=>`<option>${o}</option>`).join('')}</select>`;
+      if (f.ta)   return `<label>${f.l}${f.req?' *':''}</label><textarea id="${id}"></textarea>`;
+      return `<label>${f.l}${f.req?' *':''}</label><input id="${id}" type="${f.type||'text'}">`;
+    }).join('');
+    $('modalMsg').innerHTML = '';
+    $('saveBtn').onclick = () => saveRecord(table);
+    $('modal').classList.remove('hidden');
+  }
+  function closeModal(){ $('modal').classList.add('hidden'); }
+  async function saveRecord(table){
+    if(!companyId){ $('modalMsg').innerHTML = `<div class="msg err">No brokerage linked to your account — ask an admin.</div>`; return; }
+    const fields = FORMS[table];
+    const row = { company_id: companyId };
+    for (const f of fields) {
+      const el = $('f_' + f.n); let v = el ? el.value.trim() : '';
+      if (v !== '') { row[f.n] = (f.type === 'number') ? Number(v) : v; }
+      else if (f.req) { $('modalMsg').innerHTML = `<div class="msg err">${f.l} is required.</div>`; return; }
+    }
+    if (table === 'calendar_events') row.owner_id = userId;
+    $('modalMsg').innerHTML = '<div class="loado">Saving…</div>';
+    const { error } = await sb.from(table).insert(row);
+    if (error) { $('modalMsg').innerHTML = `<div class="msg err">${error.message}</div>`; return; }
+    closeModal();
+    renderView(curView);
   }
 
   async function renderDashboard(body) {
@@ -227,7 +308,7 @@
       </div>
       <div class="panel">
         <h3>Welcome, ${profile.full_name || profile.email || 'there'} 👋</h3>
-        <p>You're signed in to the live Real Estate Ranch CRM as <b>${TIERS[profile.tier]||'Agent'}</b>. Every number and list here comes straight from your database and respects your access level — ${isAgent?'you see your own leads, listings and compliance':'you see the whole brokerage'}. Use the menu on the left to move through the modules.</p>
+        <p>You're signed in to the live Real Estate Ranch CRM as <b>${TIERS[profile.tier]||'Agent'}</b>. Every number and list here comes straight from your database and respects your access level — ${isAgent?'you see your own leads, listings and compliance':'you see the whole brokerage'}. Use the menu on the left, and the <b>+ Add</b> button on each screen to create records.</p>
       </div>
       <div class="panel">
         <h3>Compliance at a glance</h3>
@@ -235,26 +316,29 @@
       </div>`;
   }
 
-  async function renderTable(body, table, cols) {
+  async function renderTable(body, m) {
+    const table = m.tbl, cols = m.cols;
     const { data, error } = await sb.from(table).select('*').order('created_at', { ascending:false }).limit(200);
-    if (error) { body.innerHTML = `<div class="msg err">${error.message}</div>`; return; }
-    if (!data || !data.length) { body.innerHTML = `<div class="panel"><div class="empty">Nothing here yet. Records you add (and that your access level lets you see) will show up here.</div></div>`; return; }
+    const bar = addBar(table);
+    if (error) { body.innerHTML = bar + `<div class="msg err">${error.message}</div>`; return; }
+    if (!data || !data.length) { body.innerHTML = bar + `<div class="panel"><div class="empty">Nothing here yet.${FORMS[table]?' Click <b>+ Add</b> to create your first record.':''}</div></div>`; return; }
     const head = cols.map(c => `<th>${c.replace(/_/g,' ')}</th>`).join('');
     const rows = data.map(r => `<tr>${cols.map(c => `<td>${r[c] ?? '—'}</td>`).join('')}</tr>`).join('');
-    body.innerHTML = `<div class="panel"><table><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table></div>`;
+    body.innerHTML = bar + `<div class="panel"><table><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table></div>`;
   }
 
   async function renderListings(body) {
     const { data, error } = await sb.from('properties').select('*').order('created_at', { ascending:false }).limit(200);
     let inner;
     if (error) inner = `<div class="msg err">${error.message}</div>`;
-    else if (!data || !data.length) inner = `<div class="empty">No listings yet. Every brokerage listing will show here so whoever's on the phone can see current inventory.</div>`;
+    else if (!data || !data.length) inner = `<div class="empty">No listings yet. Click <b>+ Add Listing</b> — every brokerage listing shows here so whoever's on the phone can see current inventory.</div>`;
     else {
       const rows = data.map(r => `<tr><td>${r.name ?? '—'}</td><td>${r.type ?? '—'}</td><td><span class="tag">${r.board ?? '—'}</span></td><td>${r.status ?? '—'}</td><td>${r.price ?? '—'}</td><td>${r.listed_by ?? '—'}</td></tr>`).join('');
       inner = `<table><thead><tr><th>Listing</th><th>Type</th><th>Board</th><th>Status</th><th>Price</th><th>Listed by</th></tr></thead><tbody>${rows}</tbody></table>`;
     }
     body.innerHTML = `
-      <div class="note">Boards/markets: <b>PBBOR (Permian Basin)</b> · <b>Odessa</b> · <b>Unlock MLS / ACTRIS (Austin)</b> · Other. Only PBBOR &amp; Odessa connect by feed; everything else is added manually. (Manual add + feeds wire up next.)</div>
+      ${addBar('properties')}
+      <div class="note">Boards/markets: <b>PBBOR (Permian Basin)</b> · <b>Odessa</b> · <b>Unlock MLS / ACTRIS (Austin)</b> · Other. Only PBBOR &amp; Odessa connect by feed; everything else is added manually with <b>+ Add Listing</b>.</div>
       <div class="panel">${inner}</div>`;
   }
 
