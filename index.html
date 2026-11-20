@@ -38,7 +38,7 @@
   .sb-brand small{display:block;color:#9a978e;font-size:11px}
   .nav-group{margin-bottom:6px}
   .nav-group .glabel{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:#8a877e;font-weight:700;padding:10px 12px 4px}
-  .nav a{display:block;padding:8px 12px;border-radius:8px;color:#CFCCC4;text-decoration:none;font-size:13.5px;font-weight:500;margin-bottom:1px;cursor:pointer}
+  .nav a{display:block;padding:8px 12px;border-radius:8px;color:#CFCCC4;text-decoration:none;font-size:13.5px;font-weight:500;margin-bottom:1px;cursor:pointer;white-space:nowrap}
   .nav a.active,.nav a:hover{background:var(--orange);color:#fff}
   .sb-foot{margin-top:auto;font-size:12px;color:#9a978e;padding-top:12px}
   .sb-foot button{background:none;border:1px solid #3a3a3a;color:#CFCCC4;border-radius:8px;padding:7px 10px;font:inherit;font-size:12px;cursor:pointer;width:100%;margin-top:8px}
@@ -54,19 +54,28 @@
   .panel{background:var(--panel);border:1.5px solid #161616;border-radius:var(--radius);padding:18px 20px;margin-bottom:16px;box-shadow:0 2px 0 rgba(22,22,22,.06)}
   .panel h3{font-size:16px;margin-bottom:6px}
   .panel p{color:var(--muted);font-size:14px;line-height:1.6;margin:0}
+  .tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
   table{width:100%;border-collapse:collapse;font-size:13.5px}
-  th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line)}
+  th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
   th{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+  tr.clickable{cursor:pointer}
+  tr.clickable:hover td{background:var(--orange-soft)}
   .empty{color:var(--muted);font-size:14px;padding:20px 0;text-align:center}
   .loado{color:var(--muted);font-size:13px}
   .tag{display:inline-block;background:var(--orange-soft);color:#9c3d12;font-size:11px;font-weight:600;padding:2px 9px;border-radius:12px}
+  .badge{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;border:1.5px solid #161616}
+  .badge.sub{background:#Eef;color:#334}
+  .badge.rev{background:#FFF4E0;color:#8a5a12}
+  .badge.app{background:#E7F4EC;color:var(--green)}
+  .badge.att{background:#FDECEA;color:#B23B2E}
   .phasebar{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 2px}
   .phase{flex:1;min-width:180px;background:var(--panel);border:1.5px solid #161616;border-left:4px solid var(--orange);border-radius:10px;padding:12px 14px}
   .phase b{font-size:13px}.phase span{display:block;color:var(--muted);font-size:12px;margin-top:3px}
   .dir a{color:var(--orange);text-decoration:none;font-weight:600}
   .note{background:var(--orange-soft);border:1px solid #f2c7ad;color:#8a3a12;border-radius:10px;padding:10px 13px;font-size:13px;margin-bottom:14px}
-  .addbar{display:flex;justify-content:flex-end;margin-bottom:12px}
+  .addbar{display:flex;justify-content:flex-end;gap:10px;margin-bottom:12px;flex-wrap:wrap}
   .btn-add{background:var(--orange);color:#fff;border:none;border-radius:9px;padding:9px 16px;font:inherit;font-weight:600;font-size:13.5px;cursor:pointer}
+  .btn-add.sec{background:#fff;color:var(--ink);border:1.5px solid #161616}
   .btn-add:hover{filter:brightness(1.05)}
   .modal{position:fixed;inset:0;background:rgba(10,10,10,.5);display:grid;place-items:center;padding:20px;z-index:60}
   .modal-card{background:var(--panel);border:2px solid #161616;border-radius:14px;width:100%;max-width:440px;max-height:90vh;overflow:auto;padding:22px 24px}
@@ -74,7 +83,30 @@
   .modal-actions{display:flex;gap:10px;margin-top:18px}
   .modal-actions .btn{margin-top:0;flex:1}
   .modal-actions .btn.ghost{flex:0 0 auto;border:1px solid var(--line)}
-  @media(max-width:760px){.sidebar{width:100%;flex-direction:row;flex-wrap:wrap;position:static}.main{padding:16px}#app{flex-direction:column}.nav{display:flex;flex-wrap:wrap}.nav-group{margin:0}.nav-group .glabel{display:none}.sb-foot{margin:0}}
+  /* compliance checklist */
+  .cl-phase{margin-bottom:10px}
+  .cl-phase h4{font-family:'Zilla Slab';font-size:14px;margin:0 0 6px;padding:6px 10px;background:var(--ink);color:#fff;border-radius:8px}
+  .cl-item{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-bottom:1px solid var(--line);font-size:13.5px}
+  .cl-item input{width:18px;height:18px;flex:none;margin-top:1px;accent-color:var(--orange)}
+  .cl-item.done{opacity:.6;text-decoration:line-through}
+  .prog{height:8px;background:var(--line);border-radius:5px;overflow:hidden;margin:4px 0 14px}
+  .prog > i{display:block;height:100%;background:var(--orange)}
+  .backbtn{background:none;border:none;color:var(--orange);font:inherit;font-weight:600;cursor:pointer;padding:0;margin-bottom:12px;font-size:13.5px}
+  .kv{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:12px;font-size:13.5px}
+  .kv b{color:var(--muted);font-weight:600;text-transform:uppercase;font-size:11px;letter-spacing:.04em;display:block}
+  @media(max-width:760px){
+    #app{flex-direction:column}
+    .sidebar{width:100%;flex-direction:column;position:static;padding:12px}
+    .sb-brand{margin-bottom:10px}
+    .nav{display:flex;flex-direction:row;flex-wrap:nowrap;overflow-x:auto;gap:4px;padding-bottom:4px}
+    .nav-group{margin:0;display:flex}
+    .nav-group .glabel{display:none}
+    .sb-foot{margin:10px 0 0;display:flex;align-items:center;gap:10px}
+    .sb-foot button{width:auto;margin-top:0}
+    .main{padding:16px}
+    .stats{grid-template-columns:repeat(auto-fit,minmax(130px,1fr))}
+    .topbar h2{font-size:20px}
+  }
 </style>
 </head>
 <body>
@@ -134,13 +166,15 @@
   const SUPABASE_KEY = 'sb_publishable_LUoABxqpg2OJu69QQftVXQ_gLJR_ecw';
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
   const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const authMsg = (t, ok) => { $('authMsg').innerHTML = t ? `<div class="msg ${ok?'ok':'err'}">${t}</div>` : ''; };
   let profile = null, companyId = null, userId = null, curView = 'dashboard';
 
   const TIERS = {owner:'Owner', main_admin:'Main Admin', admin:'Admin', agent:'Agent'};
   const SING = {leads:'Lead', contacts:'Contact', buyers:'Buyer', sellers:'Seller', properties:'Listing', tasks:'Task', calendar_events:'Event'};
+  const STATUSES = ['Submitted','Under Review','Approved','Needs Attention'];
+  const badgeClass = s => ({'Submitted':'sub','Under Review':'rev','Approved':'app','Needs Attention':'att'}[s]||'sub');
 
-  // Add-form field definitions per table. company_id is attached automatically.
   const FORMS = {
     leads: [ {n:'name',l:'Name',req:1},{n:'email',l:'Email'},{n:'phone',l:'Phone'},{n:'source',l:'Source'},
       {n:'status',l:'Status',opts:['New','Contacted','Qualified','Nurturing','Under Contract','Closed','Lost']},
@@ -169,8 +203,7 @@
     ]},
     {label:'Deals', items:[
       {v:'listings',t:'Listings',special:'listings'},
-      {v:'transactions',t:'Transactions',tbl:'compliance_files',cols:['deal','type','status']},
-      {v:'compliance',t:'Compliance',special:'compliance'},
+      {v:'compliance',t:'Transactions',special:'compliance'},
     ]},
     {label:'Money', items:[
       {v:'commission',t:'Commission',special:'stub',desc:'Commission structures per agent, splits, and amount-due tracking pulled from each closed transaction.'},
@@ -188,6 +221,15 @@
     ]},
   ];
   const ALL = {}; GROUPS.forEach(g=>g.items.forEach(i=>ALL[i.v]=i));
+
+  // ---- phase sorting for compliance forms ----
+  function phaseOf(name){
+    const n = String(name).toLowerCase();
+    if (/iabs|information about broker|listing agreement|buyer.?s rep|buyer.?s representation|representation agreement|intermediary/.test(n)) return 1;
+    if (/closing|walk-?through|title commitment|\bsurvey\b|settlement|disburs|commission|compensation/.test(n)) return 3;
+    return 2;
+  }
+  const PHASE_NAMES = {1:'Phase 1 — Initial Docs', 2:'Phase 2 — Contract Documents & Addenda', 3:'Phase 3 — Closing Documents'};
 
   $('toSignup').onclick = () => { $('signinBtn').classList.add('hidden'); $('toSignup').classList.add('hidden'); $('signupBtn').classList.remove('hidden'); $('toSignin').classList.remove('hidden'); authMsg(''); };
   $('toSignin').onclick = () => { $('signinBtn').classList.remove('hidden'); $('toSignup').classList.remove('hidden'); $('signupBtn').classList.add('hidden'); $('toSignin').classList.add('hidden'); authMsg(''); };
@@ -312,7 +354,7 @@
       </div>
       <div class="panel">
         <h3>Compliance at a glance</h3>
-        <p>Turn-in runs in three phases — <b>Phase 1 Initial Docs</b> (IABS, Listing Agreement, Buyer's Rep), <b>Phase 2 Contract Documents &amp; Addenda</b>, <b>Phase 3 Closing Documents</b> — with ${types} transaction types loaded from your 2026 TXR/TREC checklists. Open <b>Compliance</b> for the full breakdown.</p>
+        <p>Open a transaction, pick its type, and the matching <b>TXR/TREC checklist</b> loads automatically — grouped into <b>Phase 1 Initial Docs</b>, <b>Phase 2 Contract Documents</b>, and <b>Phase 3 Closing Documents</b>. Check items off as you turn them in; back office reviews and approves. Go to <b>Transactions</b> to start.</p>
       </div>`;
   }
 
@@ -324,7 +366,7 @@
     if (!data || !data.length) { body.innerHTML = bar + `<div class="panel"><div class="empty">Nothing here yet.${FORMS[table]?' Click <b>+ Add</b> to create your first record.':''}</div></div>`; return; }
     const head = cols.map(c => `<th>${c.replace(/_/g,' ')}</th>`).join('');
     const rows = data.map(r => `<tr>${cols.map(c => `<td>${r[c] ?? '—'}</td>`).join('')}</tr>`).join('');
-    body.innerHTML = bar + `<div class="panel"><table><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table></div>`;
+    body.innerHTML = bar + `<div class="panel"><div class="tablewrap"><table><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table></div></div>`;
   }
 
   async function renderListings(body) {
@@ -334,7 +376,7 @@
     else if (!data || !data.length) inner = `<div class="empty">No listings yet. Click <b>+ Add Listing</b> — every brokerage listing shows here so whoever's on the phone can see current inventory.</div>`;
     else {
       const rows = data.map(r => `<tr><td>${r.name ?? '—'}</td><td>${r.type ?? '—'}</td><td><span class="tag">${r.board ?? '—'}</span></td><td>${r.status ?? '—'}</td><td>${r.price ?? '—'}</td><td>${r.listed_by ?? '—'}</td></tr>`).join('');
-      inner = `<table><thead><tr><th>Listing</th><th>Type</th><th>Board</th><th>Status</th><th>Price</th><th>Listed by</th></tr></thead><tbody>${rows}</tbody></table>`;
+      inner = `<div class="tablewrap"><table><thead><tr><th>Listing</th><th>Type</th><th>Board</th><th>Status</th><th>Price</th><th>Listed by</th></tr></thead><tbody>${rows}</tbody></table></div>`;
     }
     body.innerHTML = `
       ${addBar('properties')}
@@ -342,26 +384,120 @@
       <div class="panel">${inner}</div>`;
   }
 
+  // ---- COMPLIANCE / TRANSACTIONS ----
   async function renderCompliance(body) {
-    const [types, files] = await Promise.all([count('transaction_types'), count('compliance_files')]);
-    const { data } = await sb.from('compliance_files').select('*').order('created_at',{ascending:false}).limit(100);
-    let list = (!data || !data.length)
-      ? `<div class="empty">No compliance files turned in yet. As agents open transactions and turn in documents, they'll appear here with their phase and review status.</div>`
-      : `<table><thead><tr><th>Deal</th><th>Type</th><th>Status</th></tr></thead><tbody>${data.map(r=>`<tr><td>${r.deal??'—'}</td><td>${r.type??'—'}</td><td>${r.status??'—'}</td></tr>`).join('')}</tbody></table>`;
+    const { data, error } = await sb.from('compliance_files').select('*').order('created_at',{ascending:false}).limit(200);
+    const types = await count('transaction_types');
+    let list;
+    if (error) list = `<div class="msg err">${error.message}</div>`;
+    else if (!data || !data.length) list = `<div class="empty">No transactions yet. Click <b>+ New Transaction</b> to open one and load its TXR/TREC checklist.</div>`;
+    else {
+      const rows = data.map(r => {
+        const items = r.items || {};
+        const done = Object.values(items).filter(Boolean).length;
+        const total = Object.keys(items).length;
+        const pct = total ? Math.round(done/total*100) : 0;
+        return `<tr class="clickable" onclick="openComplianceFile('${r.id}')"><td>${esc(r.deal||'—')}</td><td>${esc(r.type||'—')}</td><td><span class="badge ${badgeClass(r.status)}">${esc(r.status||'Submitted')}</span></td><td>${total?done+'/'+total+' ('+pct+'%)':'—'}</td></tr>`;
+      }).join('');
+      list = `<div class="tablewrap"><table><thead><tr><th>Deal</th><th>Type</th><th>Status</th><th>Docs turned in</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+    }
     body.innerHTML = `
-      <div class="stats">
-        <div class="stat"><div class="k">Transaction Types</div><div class="v">${types}</div></div>
-        <div class="stat"><div class="k">Files Turned In</div><div class="v">${files}</div></div>
-      </div>
+      <div class="addbar"><button class="btn-add" type="button" onclick="openTxnForm()">+ New Transaction</button></div>
       <div class="panel"><h3>Compliance as you go — 3 phases</h3>
         <div class="phasebar">
           <div class="phase"><b>Phase 1 — Initial Docs</b><span>IABS, Listing Agreement, Buyer's Rep</span></div>
           <div class="phase"><b>Phase 2 — Contract Docs</b><span>Executed contract, receipts, disclosures, addenda</span></div>
           <div class="phase"><b>Phase 3 — Closing Docs</b><span>Closing statement, final walk-through, title, survey</span></div>
         </div>
-        <p style="margin-top:10px">Realtors turn documents in by phase as the deal moves. Notes pop up telling them what's due next; back office reviews each phase (Submitted → Under Review → Approved / Needs Attention). Types come from your 2026 TXR/TREC checklists.</p>
+        <p style="margin-top:10px">Open a transaction below to see its checklist. ${types} transaction types are loaded from your 2026 TXR/TREC checklists. Check off each form as it's turned in; back office sets the review status.</p>
       </div>
-      <div class="panel"><h3>Turned-in files</h3>${list}</div>`;
+      <div class="panel"><h3>Transactions</h3>${list}</div>`;
+  }
+
+  async function openTxnForm(){
+    if(!companyId){ alert('No brokerage linked to your account — ask an admin.'); return; }
+    $('modalTitle').textContent = 'New Transaction';
+    $('modalBody').innerHTML = '<div class="loado">Loading transaction types…</div>';
+    $('modalMsg').innerHTML = '';
+    $('modal').classList.remove('hidden');
+    const { data: types } = await sb.from('transaction_types').select('id,name').order('name');
+    const opts = (types||[]).map(t=>`<option value="${esc(t.name)}">${esc(t.name)}</option>`).join('');
+    $('modalBody').innerHTML = `
+      <label>Transaction type *</label>
+      <select id="f_type"><option value="">— choose —</option>${opts}</select>
+      <label>Deal / property name *</label>
+      <input id="f_deal" type="text" placeholder="e.g. 320ac Monahans Ranch — Carter">`;
+    $('saveBtn').onclick = saveTxn;
+  }
+  async function saveTxn(){
+    const type = $('f_type').value, deal = $('f_deal').value.trim();
+    if(!type){ $('modalMsg').innerHTML = `<div class="msg err">Pick a transaction type.</div>`; return; }
+    if(!deal){ $('modalMsg').innerHTML = `<div class="msg err">Enter a deal name.</div>`; return; }
+    $('modalMsg').innerHTML = '<div class="loado">Creating…</div>';
+    const { data, error } = await sb.from('compliance_files').insert({ company_id:companyId, type, deal, status:'Submitted', items:{} }).select('id').single();
+    if(error){ $('modalMsg').innerHTML = `<div class="msg err">${error.message}</div>`; return; }
+    closeModal();
+    openComplianceFile(data.id);
+  }
+
+  async function openComplianceFile(id){
+    const body = $('viewBody'); $('viewTitle').textContent = 'Transaction'; body.innerHTML = '<div class="loado">Loading…</div>';
+    const { data: f, error } = await sb.from('compliance_files').select('*').eq('id', id).single();
+    if(error){ body.innerHTML = `<div class="msg err">${error.message}</div>`; return; }
+    const { data: tt } = await sb.from('transaction_types').select('required_forms').eq('name', f.type).limit(1).maybeSingle();
+    const forms = (tt && tt.required_forms) ? tt.required_forms : [];
+    const items = f.items || {};
+    window.__cf = { id, items };
+    // group forms by phase
+    const byPhase = {1:[],2:[],3:[]};
+    forms.forEach(fn => byPhase[phaseOf(fn)].push(fn));
+    const done = forms.filter(fn => items[fn]).length;
+    const pct = forms.length ? Math.round(done/forms.length*100) : 0;
+    const canReview = profile.tier !== 'agent';
+    let phasesHtml = '';
+    [1,2,3].forEach(p => {
+      if(!byPhase[p].length) return;
+      const pdone = byPhase[p].filter(fn=>items[fn]).length;
+      phasesHtml += `<div class="cl-phase"><h4>${PHASE_NAMES[p]} — ${pdone}/${byPhase[p].length}</h4>` +
+        byPhase[p].map(fn => `<label class="cl-item ${items[fn]?'done':''}"><input type="checkbox" class="cl-check" data-form="${esc(fn)}" ${items[fn]?'checked':''}><span>${esc(fn)}</span></label>`).join('') +
+        `</div>`;
+    });
+    if(!forms.length) phasesHtml = `<div class="empty">No form list found for "${esc(f.type)}". You can still track its status above.</div>`;
+    const statusOpts = STATUSES.map(s=>`<option ${s===(f.status||'Submitted')?'selected':''}>${s}</option>`).join('');
+    body.innerHTML = `
+      <button class="backbtn" onclick="renderView('compliance')">← Back to Transactions</button>
+      <div class="panel">
+        <div class="kv">
+          <div><b>Deal</b>${esc(f.deal||'—')}</div>
+          <div><b>Type</b>${esc(f.type||'—')}</div>
+          <div><b>Status</b><span class="badge ${badgeClass(f.status)}">${esc(f.status||'Submitted')}</span></div>
+        </div>
+        <div><b style="font-size:11px;color:var(--muted);text-transform:uppercase">Overall progress — ${done}/${forms.length} (${pct}%)</b></div>
+        <div class="prog"><i style="width:${pct}%"></i></div>
+      </div>
+      <div class="panel"><h3>Document checklist</h3>${phasesHtml}</div>
+      ${canReview ? `<div class="panel"><h3>Back-office review</h3>
+        <label>Status</label><select id="cfStatus">${statusOpts}</select>
+        <label>Review notes (shown to the realtor)</label><textarea id="cfNotes">${esc(f.review_notes||'')}</textarea>
+        <button class="btn" id="cfSaveReview" style="margin-top:14px">Save review</button>
+        <div id="cfReviewMsg"></div></div>`
+        : (f.review_notes ? `<div class="note"><b>Back-office note:</b> ${esc(f.review_notes)}</div>` : '')}`;
+    // wire checkboxes
+    body.querySelectorAll('.cl-check').forEach(cb => cb.addEventListener('change', onCheck));
+    if(canReview){ $('cfSaveReview').onclick = () => saveReview(id); }
+  }
+
+  async function onCheck(e){
+    const fn = e.target.getAttribute('data-form');
+    window.__cf.items[fn] = e.target.checked;
+    e.target.closest('.cl-item').classList.toggle('done', e.target.checked);
+    await sb.from('compliance_files').update({ items: window.__cf.items }).eq('id', window.__cf.id);
+  }
+  async function saveReview(id){
+    const status = $('cfStatus').value, notes = $('cfNotes').value;
+    $('cfReviewMsg').innerHTML = '<div class="loado">Saving…</div>';
+    const { error } = await sb.from('compliance_files').update({ status, review_notes:notes, reviewer_id:userId }).eq('id', id);
+    $('cfReviewMsg').innerHTML = error ? `<div class="msg err">${error.message}</div>` : `<div class="msg ok">Review saved.</div>`;
   }
 
   async function renderDirectory(body) {
@@ -371,7 +507,7 @@
     else if (!data || !data.length) inner = `<div class="empty">No team members loaded yet.</div>`;
     else {
       const rows = data.map(r => `<tr><td>${r.full_name ?? '—'}</td><td>${TIERS[r.tier]||r.tier||'—'}</td><td class="dir">${r.email?`<a href="mailto:${r.email}">${r.email}</a>`:'—'}</td></tr>`).join('');
-      inner = `<table><thead><tr><th>Name</th><th>Role</th><th>Email</th></tr></thead><tbody>${rows}</tbody></table>`;
+      inner = `<div class="tablewrap"><table><thead><tr><th>Name</th><th>Role</th><th>Email</th></tr></thead><tbody>${rows}</tbody></table></div>`;
     }
     body.innerHTML = `<div class="note">Always-available brokerage directory — click any email to contact. Visible to everyone.</div><div class="panel dir">${inner}</div>`;
   }
