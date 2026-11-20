@@ -102,6 +102,16 @@
   .doc-btn{background:#fff;border:1.5px solid #161616;border-radius:8px;padding:6px 12px;font:inherit;font-size:12px;font-weight:600;cursor:pointer;flex:none}
   .doc-btn:hover{filter:brightness(.97)}
   .doc-btn.del{color:#B23B2E;border-color:#B23B2E}
+  .ev-day{margin-bottom:16px}
+  .ev-day h4{font-family:'Zilla Slab';font-size:14px;margin:0 0 8px;padding-bottom:5px;border-bottom:2px solid var(--ink)}
+  .ev-item{display:flex;gap:14px;align-items:flex-start;padding:10px 12px;border:1.5px solid #161616;border-left:4px solid var(--orange);border-radius:10px;margin-bottom:8px;background:#fff}
+  .ev-time{flex:0 0 118px;font-weight:700;font-size:13px;color:#9c3d12}
+  .ev-main{flex:1;min-width:0;font-size:14px}
+  .ev-note{display:block;color:var(--muted);font-size:12.5px;margin-top:4px}
+  @media(max-width:760px){
+    .ev-item{flex-direction:column;gap:3px;border-left-width:4px}
+    .ev-time{flex:none}
+  }
   @media(max-width:760px){
     #app{flex-direction:column}
     .sidebar{width:100%;flex-direction:column;position:static;padding:12px}
@@ -221,7 +231,7 @@
       {v:'accounting',t:'Accounting',special:'stub',desc:'Brokerage ledger, invoicing, and payment tracking — the finance back office.'},
     ]},
     {label:'Work', items:[
-      {v:'calendar',t:'Calendar',tbl:'calendar_events',cols:['title','type','event_date','start_time','end_time']},
+      {v:'calendar',t:'Calendar',special:'calendar'},
       {v:'tasks',t:'Tasks',tbl:'tasks',cols:['title','status','priority','due_date']},
       {v:'marketing',t:'Marketing',special:'marketing'},
       {v:'reports',t:'Reports',special:'stub',desc:'Pipeline, production, and compliance reports across the brokerage.'},
@@ -304,6 +314,7 @@
       if (m.special === 'listings')  return renderListings(body);
       if (m.special === 'compliance')return renderCompliance(body);
       if (m.special === 'directory') return renderDirectory(body);
+      if (m.special === 'calendar')  return renderCalendar(body);
       if (m.special === 'marketing') return renderMarketing(body);
       if (m.special === 'stub')      return renderStub(body, m);
       return renderTable(body, m);
@@ -318,15 +329,94 @@
   function openAddForm(table){
     const fields = FORMS[table]; if(!fields) return;
     $('modalTitle').textContent = 'Add ' + (SING[table] || 'record');
-    $('modalBody').innerHTML = fields.map(f => {
+    const importBlock = (table === 'properties') ? `
+      <div class="note" style="margin-bottom:10px">Have an MLS sheet? <b>Import the PDF</b> to auto-fill these fields — then review and Save.</div>
+      <input type="file" id="mlsFile" accept=".pdf" style="display:none">
+      <button class="btn-add sec" type="button" id="mlsImportBtn" style="margin-bottom:12px">📄 Import from MLS sheet (PDF)</button>
+      <div id="mlsMsg" style="margin-bottom:8px"></div>` : '';
+    $('modalBody').innerHTML = importBlock + fields.map(f => {
       const id = 'f_' + f.n;
       if (f.opts) return `<label>${f.l}${f.req?' *':''}</label><select id="${id}"><option value="">—</option>${f.opts.map(o=>`<option>${o}</option>`).join('')}</select>`;
       if (f.ta)   return `<label>${f.l}${f.req?' *':''}</label><textarea id="${id}"></textarea>`;
       return `<label>${f.l}${f.req?' *':''}</label><input id="${id}" type="${f.type||'text'}">`;
     }).join('');
     $('modalMsg').innerHTML = '';
+    if (table === 'properties') {
+      const mf = $('mlsFile'), mb = $('mlsImportBtn');
+      mb.onclick = () => mf.click();
+      mf.onchange = () => { if(mf.files[0]) importMls(mf.files[0]); mf.value=''; };
+    }
     $('saveBtn').onclick = () => saveRecord(table);
     $('modal').classList.remove('hidden');
+  }
+
+  // ---- MLS PDF import (auto-fill the listing form) ----
+  function loadPdfJs(){
+    if(window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
+    return new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+      s.onload = () => { window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; res(window.pdfjsLib); };
+      s.onerror = () => rej(new Error('Could not load the PDF reader.'));
+      document.head.appendChild(s);
+    });
+  }
+  async function extractPdfText(file){
+    const pdfjs = await loadPdfJs();
+    const buf = await file.arrayBuffer();
+    const doc = await pdfjs.getDocument({ data: buf }).promise;
+    let text = '';
+    for(let i=1;i<=doc.numPages;i++){
+      const page = await doc.getPage(i);
+      const content = await page.getTextContent();
+      text += content.items.map(it => it.str).join(' ') + '\n';
+    }
+    return text;
+  }
+  function parseMls(text){
+    const out = {};
+    let m = text.match(/MLS\s*#?\s*:?\s*([A-Z]?\d[\dA-Z\-]{3,})/i); if(m) out.mls_number = m[1];
+    m = text.match(/(?:List\s*Price|Current\s*Price|Price|LP)\s*:?\s*\$?\s*([\d][\d,]{2,})/i); if(m) out.price = m[1].replace(/,/g,'');
+    m = text.match(/\b(\d{2,6}\s+[A-Za-z0-9.'\-\s]{3,44}?(?:Rd|Road|St|Street|Ave|Avenue|Dr|Drive|Ln|Lane|Blvd|Hwy|Highway|Ct|Court|Way|Trail|Pkwy|Cir|Circle|Acres?|Ranch|FM\s*\d+))\b/);
+    if(m) out.name = m[1].replace(/\s+/g,' ').trim();
+    const low = text.toLowerCase();
+    if(/\bland\b|acreage|lot\b/.test(low)) out.type = 'Land';
+    else if(/\bcommercial\b/.test(low)) out.type = 'Commercial';
+    else if(/\bindustrial\b/.test(low)) out.type = 'Industrial';
+    else if(/\branch\b|farm\b/.test(low)) out.type = 'Ranch';
+    else if(/\bresidential\b|single family|\bsfr\b/.test(low)) out.type = 'Residential';
+    if(/under\s*contract/.test(low)) out.status = 'Under Contract';
+    else if(/\bpending\b/.test(low)) out.status = 'Pending';
+    else if(/\bactive\b/.test(low)) out.status = 'Active';
+    else if(/\bsold\b|closed\b/.test(low)) out.status = 'Sold';
+    else if(/withdrawn|expired|cancel/.test(low)) out.status = 'Withdrawn';
+    if(/pbbor|permian\s*basin/.test(low)) out.board = 'PBBOR (Permian Basin)';
+    else if(/odessa/.test(low)) out.board = 'Odessa';
+    else if(/actris|unlock\s*mls|austin/.test(low)) out.board = 'Unlock MLS / ACTRIS (Austin)';
+    return out;
+  }
+  function setField(name, val){
+    const el = $('f_' + name); if(!el || val == null || val === '') return false;
+    if(el.tagName === 'SELECT'){
+      const opt = Array.from(el.options).find(o => o.value === val || o.text === val);
+      if(opt){ el.value = opt.value || opt.text; return true; }
+      return false;
+    }
+    el.value = val; return true;
+  }
+  async function importMls(file){
+    const msg = $('mlsMsg');
+    msg.innerHTML = `<div class="loado">Reading ${esc(file.name)}…</div>`;
+    try {
+      const text = await extractPdfText(file);
+      const parsed = parseMls(text);
+      const filled = [];
+      ['name','type','board','status','price','mls_number'].forEach(k => { if(setField(k, parsed[k])) filled.push(k.replace('_',' ')); });
+      if(!filled.length){ msg.innerHTML = `<div class="msg err">Couldn't read fields from that PDF — fill the form in manually. (Works best with an MLS agent-detail sheet.)</div>`; return; }
+      msg.innerHTML = `<div class="msg ok">Filled from the sheet: <b>${filled.join(', ')}</b>. Please review every field, then Save.</div>`;
+    } catch(e){
+      msg.innerHTML = `<div class="msg err">${e.message}</div>`;
+    }
   }
   function closeModal(){ $('modal').classList.add('hidden'); }
   async function saveRecord(table){
@@ -570,6 +660,30 @@
     body.innerHTML = `<div class="note">Always-available brokerage directory — click any email to contact. Visible to everyone.</div><div class="panel dir">${inner}</div>`;
   }
 
+  async function renderCalendar(body) {
+    const { data, error } = await sb.from('calendar_events').select('*').order('event_date', { ascending:true }).limit(500);
+    const bar = `<div class="addbar"><button class="btn-add" type="button" onclick="openAddForm('calendar_events')">+ Add Event</button></div>`;
+    if (error) { body.innerHTML = bar + `<div class="msg err">${error.message}</div>`; return; }
+    if (!data || !data.length) { body.innerHTML = bar + `<div class="panel"><div class="empty">No events yet. Click <b>+ Add Event</b> to add an open house, training, showing or closing — with start and end times.</div></div>`; return; }
+    const todayStr = new Date().toISOString().slice(0,10);
+    const fmtTime = t => { if(!t) return ''; const [h,mn] = String(t).split(':'); let hr = parseInt(h,10); const ap = hr>=12?'PM':'AM'; hr = hr%12||12; return `${hr}:${mn} ${ap}`; };
+    const fmtRange = r => { const s = fmtTime(r.start_time), e = fmtTime(r.end_time); if(s&&e) return `${s} – ${e}`; if(s) return s; return 'All day'; };
+    const dayKey = ev => String(ev.event_date||'').slice(0,10);
+    const fmtDay = k => { const dt = new Date(k+'T00:00:00'); return dt.toLocaleDateString(undefined,{weekday:'long', month:'long', day:'numeric', year:'numeric'}); };
+    const sortEv = (a,b) => (dayKey(a)+(a.start_time||'')).localeCompare(dayKey(b)+(b.start_time||''));
+    const upcoming = data.filter(e => dayKey(e) >= todayStr).sort(sortEv);
+    const past = data.filter(e => dayKey(e) < todayStr).sort(sortEv).reverse();
+    const evCard = ev => `<div class="ev-item"><div class="ev-time">${fmtRange(ev)}</div><div class="ev-main"><b>${esc(ev.title||'Event')}</b> ${ev.type?`<span class="tag">${esc(ev.type)}</span>`:''}${ev.notes?`<span class="ev-note">${esc(ev.notes)}</span>`:''}</div></div>`;
+    const groupByDay = evs => {
+      const groups = {};
+      evs.forEach(ev => { const k = dayKey(ev); (groups[k] = groups[k]||[]).push(ev); });
+      return Object.keys(groups).map(k => `<div class="ev-day"><h4>${fmtDay(k)}</h4>${groups[k].map(evCard).join('')}</div>`).join('');
+    };
+    body.innerHTML = bar +
+      `<div class="panel"><h3>Upcoming</h3>${upcoming.length ? groupByDay(upcoming) : '<div class="empty">Nothing coming up. Add an event above.</div>'}</div>` +
+      (past.length ? `<div class="panel"><h3>Past events</h3>${groupByDay(past.slice(0,40))}</div>` : '');
+  }
+
   async function renderMarketing(body) {
     const [emails, news, social] = await Promise.all([count('email_campaigns'), count('newsletters'), count('social_posts')]);
     body.innerHTML = `
@@ -578,7 +692,62 @@
         <div class="stat"><div class="k">Newsletters</div><div class="v">${news}</div></div>
         <div class="stat"><div class="k">Social Posts</div><div class="v">${social}</div></div>
       </div>
-      <div class="panel"><h3>Marketing</h3><p>Email blasts with merge fields, a Constant Contact-style newsletter designer, and a social planner (Facebook, Instagram, LinkedIn, TikTok). The designer and audience tools are built in your prototype; the live send engine wires up in a later phase.</p></div>`;
+      <div class="panel"><h3>Email blast</h3>
+        <p style="margin-bottom:12px">Pick an audience, write your message, and send. Use <b>{name}</b> in the message to drop in each recipient's name.</p>
+        <label>Audience</label>
+        <select id="blastAud">
+          <option value="leads">Leads</option>
+          <option value="contacts">Contacts</option>
+          <option value="buyers">Buyers</option>
+          <option value="sellers">Sellers</option>
+        </select>
+        <div id="blastCount" class="loado" style="margin:8px 0"></div>
+        <label>Subject</label>
+        <input id="blastSubj" type="text" placeholder="New Permian Basin listings this week">
+        <label>Message</label>
+        <textarea id="blastBody" style="min-height:140px" placeholder="Hi {name}, here's what's new at The Real Estate Ranch…"></textarea>
+        <div class="modal-actions" style="margin-top:16px">
+          <button class="btn-add sec" type="button" id="blastSave">Save campaign</button>
+          <button class="btn-add" type="button" id="blastSend">Open in email app</button>
+        </div>
+        <div id="blastMsg" style="margin-top:12px"></div>
+        <div class="note" style="margin-top:14px">For an automated send to a large list — with per-recipient <b>{name}</b> personalization and open tracking — we connect an email service like SendGrid or Mailchimp (a quick next step). <b>Open in email app</b> works now for a manual blast to the loaded list.</div>
+      </div>`;
+    const load = () => loadBlastAudience($('blastAud').value);
+    $('blastAud').onchange = load;
+    $('blastSave').onclick = saveBlast;
+    $('blastSend').onclick = sendBlast;
+    load();
+  }
+  async function loadBlastAudience(table){
+    const el = $('blastCount'); el.textContent = 'Loading recipients…';
+    const { data, error } = await sb.from(table).select('name,email').limit(2000);
+    if(error){ el.innerHTML = `<div class="msg err">${error.message}</div>`; window.__blast = { recipients:[], audience:table }; return; }
+    const recipients = (data||[]).filter(r => r.email && /.+@.+\..+/.test(r.email));
+    window.__blast = { recipients, audience:table };
+    el.innerHTML = `<b>${recipients.length}</b> recipient${recipients.length===1?'':'s'} with an email address in <b>${esc(table)}</b>.`;
+  }
+  async function saveBlast(){
+    const msg = $('blastMsg');
+    const subject = $('blastSubj').value.trim(), bodyText = $('blastBody').value.trim();
+    const b = window.__blast || { recipients:[], audience:'leads' };
+    if(!subject || !bodyText){ msg.innerHTML = `<div class="msg err">Add a subject and a message first.</div>`; return; }
+    if(!companyId){ msg.innerHTML = `<div class="msg err">No brokerage linked to your account — ask an admin.</div>`; return; }
+    msg.innerHTML = '<div class="loado">Saving…</div>';
+    const { error } = await sb.from('email_campaigns').insert({ company_id: companyId, subject, body: bodyText, audience: b.audience, recipient_count: b.recipients.length, status: 'Draft' });
+    if(error){ msg.innerHTML = `<div class="msg err">${error.message}</div>`; return; }
+    msg.innerHTML = `<div class="msg ok">Campaign saved as a draft (${b.recipients.length} recipients). It's now counted under Email Blasts.</div>`;
+  }
+  function sendBlast(){
+    const msg = $('blastMsg');
+    const subject = $('blastSubj').value.trim(), bodyText = $('blastBody').value.trim();
+    const b = window.__blast || { recipients:[] };
+    if(!subject || !bodyText){ msg.innerHTML = `<div class="msg err">Add a subject and a message first.</div>`; return; }
+    if(!b.recipients.length){ msg.innerHTML = `<div class="msg err">No recipients with email addresses in this audience.</div>`; return; }
+    const bcc = b.recipients.map(r => r.email).join(',');
+    const url = `mailto:?bcc=${encodeURIComponent(bcc)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyText)}`;
+    window.open(url, '_blank');
+    msg.innerHTML = `<div class="msg ok">Opening your email app with ${b.recipients.length} recipient${b.recipients.length===1?'':'s'} BCC'd — review and send from there. ({name} personalization applies once an email service is connected.)</div>`;
   }
 
   function renderStub(body, m) {
